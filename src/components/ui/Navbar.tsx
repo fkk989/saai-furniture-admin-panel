@@ -31,6 +31,9 @@ export const Navbar = () => {
   const { subAdmin } = useGetSubAdmin();
   const is_admin = useRecoilValue(isAdmin);
   useEffect(() => {
+    if (navbar && navbar.current) {
+      navbar.current.style.top = "0";
+    }
     let previousScroll = window.scrollY;
     window.addEventListener("scroll", () => {
       let currentScroll = window.scrollY;
@@ -41,7 +44,7 @@ export const Navbar = () => {
       }
       previousScroll = currentScroll;
     });
-  });
+  }, []);
   return (
     <div
       ref={navbar}
@@ -57,7 +60,7 @@ export const Navbar = () => {
         </div>
       </Link>
       <div className="">
-        <ul className="flex justify-between items-center gap-[30px] text-black">
+        <ul className="flex justify-between items-center gap-[30px] text-black capitalize">
           {admin || subAdmin || is_admin ? (
             <li className="w-fit h-fit">
               <SofaSetDropDown />

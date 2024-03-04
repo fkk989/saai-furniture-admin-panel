@@ -2,23 +2,49 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { baseUrl } from "../../constant";
-import { CategoryDesign } from "../category";
 
-export const useGetDesigns = () => {
+export interface CategoryDesign {
+  id: string;
+  title: string;
+  imageUrl: string;
+  imageUrl2: string;
+  imageUrl3: string;
+  imageUrl4: string;
+  categoryId: string;
+}
+
+export const useGetDesigns = ({
+  categoryTitle,
+}: {
+  categoryTitle: string | undefined;
+}) => {
   const query = useQuery({
     queryKey: ["get-design"],
     queryFn: async () => {
-      const { data } = await axios.get(`${baseUrl}/design`);
+      const { data } = await axios.post(`${baseUrl}/design`, { categoryTitle });
 
       return data as {
-        design: CategoryDesign[];
+        designs: CategoryDesign[];
       };
     },
   });
-  return { ...query, designs: query.data };
+  return { ...query, designs: query.data?.designs };
+};
+export const useGetDiningDesigns = () => {
+  const query = useQuery({
+    queryKey: ["get-design"],
+    queryFn: async () => {
+      const { data } = await axios.post(`${baseUrl}/design/dining`);
+
+      return data as {
+        designs: CategoryDesign[];
+      };
+    },
+  });
+  return { ...query, designs: query.data?.designs };
 };
 
-export const useGetDesignById = (body: object) => {
+export const useGetDesignByTitle = (body: { title: string }) => {
   const query = useQuery({
     queryKey: ["get-design-by-id"],
     queryFn: async () => {
@@ -28,10 +54,10 @@ export const useGetDesignById = (body: object) => {
     },
   });
 
-  return { ...query, design: query.data };
+  return { ...query, design: query.data?.design };
 };
 
-export const useAddDesign = () => {
+export const useAddDesign = (resetDesignState: any) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ["adding-design"],
@@ -64,6 +90,7 @@ export const useAddDesign = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-design"] });
       toast.success("added successfully", { id: "adding-design" });
+      resetDesignState();
     },
     onError: (error) => {
       // @ts-ignore
@@ -103,7 +130,7 @@ export const useDeleteDesign = () => {
       toast.error("Error", { id: "deleting-design" });
     },
   });
-  return { ...mutation, data: mutation.data };
+  return { deleteDesignMutaion: mutation, data: mutation.data };
 };
 
 export const useUpdateDesign = () => {
@@ -111,11 +138,9 @@ export const useUpdateDesign = () => {
   const mutation = useMutation({
     mutationKey: ["update-design"],
     mutationFn: async ({
-      id,
       body,
       userType,
     }: {
-      id: string;
       body: object;
       userType: string;
     }) => {
@@ -128,18 +153,11 @@ export const useUpdateDesign = () => {
 
       toast.loading("updating project", { id: "update-design" });
       const data = (
-        await axios.put(
-          `${baseUrl}/design/${userType}/update`,
-          {
-            id,
-            ...body,
+        await axios.put(`${baseUrl}/design/${userType}/update`, body, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        })
       ).data;
 
       return data;
@@ -153,5 +171,5 @@ export const useUpdateDesign = () => {
     },
   });
 
-  return { mutation };
+  return { updateDesignMutation: mutation };
 };

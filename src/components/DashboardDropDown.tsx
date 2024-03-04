@@ -3,11 +3,13 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { isAdmin } from "../store";
+import { useGetAdmin } from "../hooks";
 
 export const DashboardDropDown = () => {
   const [open, setOpen] = useState(false);
   const dashboardDropDown = useRef<HTMLDivElement | null>(null);
   const setIsAdmin = useSetRecoilState(isAdmin);
+  const { admin } = useGetAdmin();
   return (
     <div
       onMouseEnter={() => {
@@ -29,19 +31,21 @@ export const DashboardDropDown = () => {
         }`}
       >
         <ul className="flex flex-col text-white">
-          <Link to={"/dashboard/add-admin"}>
-            <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
-              Add Admin
-            </li>
-          </Link>
+          {admin && (
+            <Link to={"/dashboard/add-admin"}>
+              <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
+                Add Admin
+              </li>
+            </Link>
+          )}
           <Link to={"/dashboard/add-category"}>
             <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
-              Add Sofa Category
+              Add Category
             </li>
           </Link>
           <Link to={"/dashboard/add-design"}>
             <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
-              Add Sofa Design
+              Add Design
             </li>
           </Link>
           <Link to={"/dashboard/add-state"}>

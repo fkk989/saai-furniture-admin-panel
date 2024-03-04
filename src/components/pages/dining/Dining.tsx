@@ -1,9 +1,8 @@
-import { useGetCategory } from "../../../hooks";
+import { useGetDiningDesigns } from "../../../hooks";
 import { SofaCard } from "../../ui/SofaCard";
-import { Link } from "react-router-dom";
 
 export const DiningPage = () => {
-  const { categories } = useGetCategory();
+  const { designs } = useGetDiningDesigns();
   return (
     <div className="w-screen min-h-screen flex flex-col  items-center">
       <div
@@ -18,14 +17,9 @@ export const DiningPage = () => {
       </div>
       {/* intro */}
       <div className="w-screen flex justify-center">
-        <div className="w-screen   mobile:w-[80vw] flex flex-wrap justify-center  mt-[50px] mb-[50px] text-[18px] gap-[30px]">
-          {categories?.map(({ id, title, imageUrl }) => {
-            const link = title.split(" ").join("-");
-            return (
-              <Link key={id} to={`/dining/${link}`}>
-                <SofaCard title={title} imageUrl={imageUrl} />
-              </Link>
-            );
+        <div className="w-screen   mobile:w-[90vw] flex flex-wrap justify-center  mt-[50px] mb-[50px] text-[18px] gap-[30px]">
+          {designs?.map(({ id, title, imageUrl }) => {
+            return <SofaCard key={id} title={title} imageUrl={imageUrl} />;
           })}
         </div>
       </div>

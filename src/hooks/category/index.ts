@@ -3,7 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { baseUrl } from "../../constant";
 
-export interface CategoryDesign {
+export interface CategoryProps {
   id: string;
   title: string;
   description: string;
@@ -16,13 +16,7 @@ export interface CategoryDesign {
   para3: string;
   para4: string;
   imageUrl: string;
-}
-
-export interface CategoryProps {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
+  popular: boolean;
 }
 
 export const useGetCategory = () => {
@@ -38,8 +32,35 @@ export const useGetCategory = () => {
   });
   return { ...query, categories: query.data?.categories };
 };
+export const useGetDiningCategory = () => {
+  const query = useQuery({
+    queryKey: ["get-category"],
+    queryFn: async () => {
+      const { data } = await axios.get(`${baseUrl}/category`);
 
-export const useGetCategoryById = (body: object) => {
+      return data as {
+        categories: CategoryProps[];
+      };
+    },
+  });
+
+  return { ...query, categories: query.data?.categories };
+};
+export const useGetAllCategory = () => {
+  const query = useQuery({
+    queryKey: ["get-all-category"],
+    queryFn: async () => {
+      const { data } = await axios.get(`${baseUrl}/category/all`);
+
+      return data as {
+        categories: CategoryProps[];
+      };
+    },
+  });
+  return { ...query, categories: query.data?.categories };
+};
+
+export const useGetCategoryById = (body: { title?: string }) => {
   const query = useQuery({
     queryKey: ["get-category-by-id"],
     queryFn: async () => {
@@ -80,7 +101,9 @@ export const useAddCategory = (resetStates: any) => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get-category"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-category", "get-all-category"],
+      });
       toast.success("added successfully", { id: "adding-category" });
       resetStates();
     },
@@ -122,7 +145,7 @@ export const useDeleteCategory = () => {
       toast.error("Error", { id: "deleting-category" });
     },
   });
-  return { categoryDeleteMutation: mutation, data: mutation.data };
+  return { deleteCategoryMutaion: mutation, data: mutation.data };
 };
 
 export const useUpdateCategory = () => {
@@ -130,11 +153,9 @@ export const useUpdateCategory = () => {
   const mutation = useMutation({
     mutationKey: ["update-category"],
     mutationFn: async ({
-      id,
       body,
       userType,
     }: {
-      id: string;
       body: object;
       userType: string;
     }) => {
@@ -146,14 +167,9 @@ export const useUpdateCategory = () => {
       }
       toast.loading("updating project", { id: "update-category" });
       const data = (
-        await axios.put(
-          `${baseUrl}/category/${userType}/update`,
-          {
-            id,
-            ...body,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
+        await axios.put(`${baseUrl}/category/${userType}/update`, body, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
       ).data;
 
       return data;
@@ -167,5 +183,5 @@ export const useUpdateCategory = () => {
     },
   });
 
-  return { mutation };
+  return { updateCategoryMutaion: mutation };
 };

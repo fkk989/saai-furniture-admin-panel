@@ -1,43 +1,37 @@
-import { useEffect, useRef, useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import {
-  useAddDesign,
+  useUpdateDesign,
   useGetAdmin,
-  useGetAllCategory,
+  useGetDesignByTitle,
   useGetSubAdmin,
   useUploadToAws,
 } from "../../hooks";
-import {
-  selectOnlyCheckBox,
-  pushToCheckbox,
-  handleImgInput,
-} from "../../helpers";
+import { handleImgInput } from "../../helpers";
 import { TbPhoto } from "react-icons/tb";
 import toast from "react-hot-toast";
 
 // input style
 const inputStyle = `w-[90%] h-[55px] bg-transparent outline-none text-white text-[20px] border border-[#ffffff88] rounded-lg placeholder:text-white placeholder:text-[20px] p-[10px] `;
 
-export const AddDesign = () => {
+interface UpdateDesignProp {
+  designTitle: string;
+}
+
+export const UpdateDesignForm: React.FC<UpdateDesignProp> = ({
+  designTitle,
+}) => {
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [imageUrl2, setImageUrl2] = useState("");
   const [imageUrl3, setImageUrl3] = useState("");
   const [imageUrl4, setImageUrl4] = useState("");
   const [userType, setUserType] = useState<"admin" | "sub-admin">();
-  const [categoryId, setCategoryId] = useState("");
 
-  function resetDesingState() {
-    setTitle("");
-    setImageUrl("");
-    setImageUrl2("");
-    setImageUrl3("");
-    setImageUrl4("");
-  }
-  // checkbox refs
-  const checkbox = useRef<HTMLInputElement[]>([]);
   const queryBody = {
     body: {
-      categoryId,
+      id,
       title: title.toLowerCase(),
       imageUrl,
       imageUrl2,
@@ -48,12 +42,23 @@ export const AddDesign = () => {
   };
   const { admin } = useGetAdmin();
   const { subAdmin } = useGetSubAdmin();
-  const { addDesignMutation } = useAddDesign(resetDesingState);
+  const { updateDesignMutation } = useUpdateDesign();
+  const { design } = useGetDesignByTitle({ title: designTitle });
   const { awsMutations } = useUploadToAws(setImageUrl, userType);
   const uploadeImage2 = useUploadToAws(setImageUrl2, userType);
   const uploadeImage3 = useUploadToAws(setImageUrl3, userType);
   const uploadeImage4 = useUploadToAws(setImageUrl4, userType);
-  const { categories } = useGetAllCategory();
+
+  useEffect(() => {
+    if (design) {
+      setId(design.id);
+      setTitle(design.title);
+      setImageUrl(design.imageUrl);
+      setImageUrl2(design.imageUrl2);
+      setImageUrl3(design.imageUrl3);
+      setImageUrl4(design.imageUrl4);
+    }
+  }, [design]);
 
   useEffect(() => {
     if (admin) {
@@ -64,10 +69,10 @@ export const AddDesign = () => {
     }
   }, [admin, subAdmin]);
   return (
-    <div className=" w-[350px] mobile:w-[500px] min-h-[450px] bg-[#999999] rounded-lg overflow-scroll z-[10]">
+    <div className=" w-[350px] mobile:w-[500px] bg-[#999999] rounded-lg overflow-scroll z-[10]">
       <div className="w-[100%] h-[100%] flex flex-col items-center">
         <h1 className="text-white text-[25px] font-[500] mt-[20px] capitalize">
-          add design
+          update design
         </h1>
         <div className="w-[100%] flex flex-wrap  items-center gap-[10px] pl-[10px] pr-[10px]">
           {imageUrl !== "" && (
@@ -94,33 +99,6 @@ export const AddDesign = () => {
             className={inputStyle}
           />
 
-          <div className="w-[90%] text-white flex flex-col  gap-[10px] flex-wrap">
-            <h2 className="text-[20px] font-bold">Select a category</h2>
-            <div className="text-white flex items-center gap-[20px] flex-wrap">
-              {categories?.map(({ id, title }) => {
-                return (
-                  <label
-                    key={id}
-                    htmlFor={id}
-                    className="flex items-center gap-[5px]"
-                  >
-                    <input
-                      ref={(e) => {
-                        pushToCheckbox(e, checkbox);
-                      }}
-                      onClick={(e) => {
-                        selectOnlyCheckBox(e.currentTarget, checkbox);
-                        setCategoryId(id);
-                      }}
-                      type="checkbox"
-                      id={id}
-                    />
-                    <span>{title}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
           {/* image input */}
           <div className="w-[90%] flex items-center gap-[20px]">
             <button
@@ -160,10 +138,10 @@ export const AddDesign = () => {
               if (title === "") {
                 return toast.error("title cannot be empty");
               }
-              addDesignMutation.mutate(queryBody);
+              updateDesignMutation.mutate(queryBody);
             }}
           >
-            Add
+            Update
           </button>
         </div>
       </div>

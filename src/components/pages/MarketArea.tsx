@@ -15,9 +15,11 @@ export const MarketArea = () => {
       </div>
       <div className="w-[90%] mt-[50px] flex flex-col gap-[50px]">
         <div className="flex flex-col gap-[10px]">
-          <h1 className="bg-[#424242ba] h-[30px] flex items-center pl-[10px] text-white text-[20px] font-bold rounded-md ">
-            States
-          </h1>
+          {states && states.length !== 0 && (
+            <h1 className="bg-[#424242ba] h-[30px] flex items-center pl-[10px] text-white text-[20px] font-bold rounded-md ">
+              States
+            </h1>
+          )}
           <ul className="flex gap-[20px] items-center flex-wrap">
             {states?.map(({ name }) => {
               return (
@@ -48,9 +50,11 @@ export const MarketArea = () => {
           );
         })}
         <div className="flex flex-col gap-[10px]">
-          <h1 className="bg-[#424242ba] h-[30px] flex items-center pl-[10px] text-white text-[20px] font-bold rounded-md ">
-            Cities
-          </h1>
+          {cities && cities.length !== 0 && (
+            <h1 className="bg-[#424242ba] h-[30px] flex items-center pl-[10px] text-white text-[20px] font-bold rounded-md ">
+              Cities
+            </h1>
+          )}
           <ul className="flex gap-[20px] items-center flex-wrap">
             {cities?.map(({ name }) => {
               return (

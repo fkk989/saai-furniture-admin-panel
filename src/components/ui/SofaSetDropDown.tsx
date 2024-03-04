@@ -36,22 +36,20 @@ export const SofaSetDropDown: React.FC<SofaDropdown> = () => {
         }`}
       >
         <ul className="flex flex-col gap-[5px] text-white">
-          {categories
-            ?.filter(({ title }) => title.toLowerCase() !== "dining set")
-            .map(({ id, title }, index) => {
-              const link = title.toLowerCase().split(" ").join("-");
+          {categories?.map(({ id, title }, index) => {
+            const link = title.toLowerCase().split(" ").join("-");
 
-              return (
-                <Link key={index} to={`/sofa/${link}`}>
-                  <li
-                    key={id}
-                    className="hover:bg-[rgba(0,0,0,0.9)] text-[20px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer"
-                  >
-                    {title}
-                  </li>
-                </Link>
-              );
-            })}
+            return (
+              <Link key={index} to={`/sofa/${link}`}>
+                <li
+                  key={id}
+                  className="hover:bg-[rgba(0,0,0,0.9)] text-[20px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer"
+                >
+                  {title}
+                </li>
+              </Link>
+            );
+          })}
         </ul>
       </div>
     </div>

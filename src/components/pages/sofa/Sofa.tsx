@@ -1,9 +1,30 @@
-import { useGetCategory } from "../../../hooks";
+import { useEffect, useState } from "react";
+import {
+  useDeleteCategory,
+  useGetAdmin,
+  useGetCategory,
+  useGetSubAdmin,
+} from "../../../hooks";
+import { DeletePage, EditPage } from "../../ui";
 import { SofaCard } from "../../ui/SofaCard";
 import { Link } from "react-router-dom";
+import { UpdateCategoryForm } from "../../fomrs/UpdateCategory";
 
 export const Sofa = () => {
+  const [userType, setUserType] = useState<"admin" | "sub-admin" | "">("");
   const { categories } = useGetCategory();
+  const { deleteCategoryMutaion } = useDeleteCategory();
+  const { admin } = useGetAdmin();
+  const { subAdmin } = useGetSubAdmin();
+
+  useEffect(() => {
+    if (admin) {
+      setUserType("admin");
+    }
+    if (subAdmin) {
+      setUserType("sub-admin");
+    }
+  }, [admin, subAdmin]);
   return (
     <div className="w-screen min-h-screen flex flex-col  items-center">
       <div
@@ -22,9 +43,23 @@ export const Sofa = () => {
           {categories?.map(({ id, title, imageUrl }) => {
             const link = title.split(" ").join("-");
             return (
-              <Link key={id} to={`/sofa/${link}`}>
-                <SofaCard title={title} imageUrl={imageUrl} />
-              </Link>
+              <div key={id}>
+                <div>
+                  <Link key={id} to={`/sofa/${link}`}>
+                    <SofaCard title={title} imageUrl={imageUrl} />
+                  </Link>
+                  <div className="flex items-center gap-[20px]">
+                    <EditPage
+                      component={<UpdateCategoryForm categoryTitle={title} />}
+                    />
+                    <DeletePage
+                      confirmation={() => {
+                        deleteCategoryMutaion.mutate({ id, userType });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -32,3 +67,23 @@ export const Sofa = () => {
     </div>
   );
 };
+
+{
+  /* <div key={data.id}>
+
+<div key={data.id}>
+                  <Link key={id} to={`/sofa/${link}`}>
+                <SofaCard title={title} imageUrl={imageUrl} />
+              </Link>
+                  <div className="flex items-center gap-[20px]">
+                    <EditPage
+                      component={<UpdateDesignForm designTitle={data.title} />}
+                    />
+                    <DeletePage
+                      confirmation={() => {
+                        deleteDesignMutaion.mutate({ id: data.id, userType });
+                      }}
+                    />
+                  </div>
+                </div> */
+}
