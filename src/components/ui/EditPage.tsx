@@ -16,7 +16,7 @@ export const EditPage: React.FC<EditPageProp> = ({ component }) => {
           onClick={() => {
             setOpen(true);
           }}
-          className="bg-blue-500 hover:bg-blue-400 text-white text-center w-[60px] h-[30px] font-bold mt-[20px] rounded-md"
+          className="bg-blue-500 hover:bg-blue-400 text-white text-center w-[60px] h-[30px] font-bold  rounded-md"
         >
           Edit
         </button>

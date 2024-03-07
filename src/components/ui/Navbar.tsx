@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useGetAdmin, useGetSubAdmin } from "../../hooks";
 import { DashboardDropDown } from "../DashboardDropDown";
 import { useRecoilValue } from "recoil";
-import { isAdmin } from "../../store";
+import { isAdmin, isSubAdmin } from "../../store";
 
 export const navObj: Array<{
   title?: string;
@@ -30,6 +30,7 @@ export const Navbar = () => {
   const { admin } = useGetAdmin();
   const { subAdmin } = useGetSubAdmin();
   const is_admin = useRecoilValue(isAdmin);
+  const is_subAdmin = useRecoilValue(isSubAdmin);
   useEffect(() => {
     if (navbar && navbar.current) {
       navbar.current.style.top = "0";
@@ -61,7 +62,7 @@ export const Navbar = () => {
       </Link>
       <div className="">
         <ul className="flex justify-between items-center gap-[30px] text-black capitalize">
-          {admin || subAdmin || is_admin ? (
+          {admin || subAdmin || is_admin || is_subAdmin ? (
             <li className="w-fit h-fit">
               <SofaSetDropDown />
             </li>
@@ -79,8 +80,16 @@ export const Navbar = () => {
               </Link>
             );
           })}
-
-          {admin || subAdmin || is_admin ? (
+          {admin || is_admin ? (
+            <Link to={"/all-admins"}>
+              <li className="text-[20px] font-bold hover:bg-[rgba(0,0,0,0.7)] p-[5px] pr-[15px] pl-[15px] hover:text-white rounded-lg cursor-pointer">
+                All Admins
+              </li>
+            </Link>
+          ) : (
+            <li></li>
+          )}
+          {admin || subAdmin || is_admin || is_subAdmin ? (
             <DashboardDropDown />
           ) : (
             <Link to={"/login"}>

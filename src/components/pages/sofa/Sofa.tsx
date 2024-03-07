@@ -43,21 +43,19 @@ export const Sofa = () => {
           {categories?.map(({ id, title, imageUrl }) => {
             const link = title.split(" ").join("-");
             return (
-              <div key={id}>
-                <div>
-                  <Link key={id} to={`/sofa/${link}`}>
-                    <SofaCard title={title} imageUrl={imageUrl} />
-                  </Link>
-                  <div className="flex items-center gap-[20px]">
-                    <EditPage
-                      component={<UpdateCategoryForm categoryTitle={title} />}
-                    />
-                    <DeletePage
-                      confirmation={() => {
-                        deleteCategoryMutaion.mutate({ id, userType });
-                      }}
-                    />
-                  </div>
+              <div key={id} className="flex flex-col gap-[10px]">
+                <Link key={id} to={`/sofa/${link}`}>
+                  <SofaCard title={title} imageUrl={imageUrl} />
+                </Link>
+                <div className="flex items-center gap-[20px]">
+                  <EditPage
+                    component={<UpdateCategoryForm categoryTitle={title} />}
+                  />
+                  <DeletePage
+                    confirmation={() => {
+                      deleteCategoryMutaion.mutate({ id, userType });
+                    }}
+                  />
                 </div>
               </div>
             );

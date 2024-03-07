@@ -17,6 +17,7 @@ import {
   AddState,
   AddCity,
   AddLocation,
+  AllAdmin,
 } from "./components";
 
 export default function App() {
@@ -76,6 +77,14 @@ export default function App() {
                 />
               }
             ></LoginProtection>
+          }
+        />
+        <Route
+          path="/all-admins"
+          element={
+            <Protected
+              component={<Layout component={<AllAdmin />} />}
+            ></Protected>
           }
         />
 

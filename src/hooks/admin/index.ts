@@ -3,6 +3,12 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { baseUrl } from "../../constant";
 
+interface Admin {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export const useDefaultAdmin = () => {
   const query = useQuery({
     queryKey: ["default-login"],
@@ -51,6 +57,25 @@ export const useGetAdmin = () => {
   });
 
   return { getAdminQuery: query, admin: query.data };
+};
+
+export const useGetAllSubAdmin = () => {
+  const query = useQuery({
+    queryKey: ["get-all-admin"],
+    queryFn: async () => {
+      const token = localStorage.getItem("saai-admin-token");
+      const { data } = await axios.get(`${baseUrl}/admin/all-sub-admin`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return data as {
+        admins: Array<Admin>;
+      };
+    },
+  });
+
+  return { getAdminQuery: query, admins: query.data?.admins };
 };
 
 // add admin mutation

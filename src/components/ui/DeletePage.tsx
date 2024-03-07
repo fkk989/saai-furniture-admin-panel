@@ -16,7 +16,7 @@ export const DeletePage: React.FC<DeletePageProps> = ({ confirmation }) => {
           onClick={() => {
             setOpen(true);
           }}
-          className="bg-red-500 hover:bg-red-400 text-white text-center w-[60px] h-[30px] font-bold mt-[20px] rounded-md"
+          className="bg-red-500 hover:bg-red-400 text-white text-center w-[60px] h-[30px] font-bold  rounded-md"
         >
           Delete
         </button>

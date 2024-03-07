@@ -67,3 +67,29 @@ export const useUpdateSubAdmin = () => {
 
   return { ...mutation, admin: mutation.data };
 };
+
+export const useDeleteSubAdmin = () => {
+  const token = localStorage.getItem("saai-admin-token");
+  const mutation = useMutation({
+    mutationKey: ["deleting-sub-admin"],
+    mutationFn: async ({ id }: { id: string }) => {
+      toast.loading("removing sub admin", { id: "removing-sub-admin" });
+      const data = (
+        await axios.delete(`${baseUrl}/sub-admin/delete`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: { id },
+        })
+      ).data;
+      return data;
+    },
+    onSuccess: () => {
+      toast.success("removed", { id: "removing-sub-admin" });
+    },
+    onError: () => {
+      toast.error("Error removing sub admin", { id: "removing-sub-admin" });
+    },
+  });
+  return { subAdminDeleteMutation: mutation };
+};

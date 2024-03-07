@@ -34,7 +34,7 @@ export const DashboardDropDown = () => {
           {admin && (
             <Link to={"/dashboard/add-admin"}>
               <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
-                Add Admin
+                Add Sub Admin
               </li>
             </Link>
           )}

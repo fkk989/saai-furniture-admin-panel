@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { pushToCheckbox, selectOnlyCheckBox } from "../../helpers";
 import { useSetRecoilState } from "recoil";
-import { isAdmin } from "../../store";
+import { isAdmin, isSubAdmin } from "../../store";
 
 // input style
 const inputStyle = `w-[90%] h-[55px] bg-transparent outline-none text-white text-[20px] border border-[#ffffff88] rounded-lg placeholder:text-white placeholder:text-[20px] p-[10px] `;
@@ -29,13 +29,19 @@ export const LoginForm = () => {
   const { refetch, admin, isError } = useAdminLogin(queryBody);
   const { query, subAdmin } = useSubAdminLogin(queryBody);
   const setAdmin = useSetRecoilState(isAdmin);
+  const setSubAdmin = useSetRecoilState(isSubAdmin);
 
   useEffect(() => {
+    if (admin) {
+      setAdmin(true);
+    }
+    if (subAdmin) {
+      setSubAdmin(true);
+    }
     if (admin || subAdmin) {
       userType === "admin"
         ? toast.success("Success", { id: "admin-login" })
         : toast.success("Success", { id: "sub-admin-login" });
-      setAdmin(true);
     }
     if (isError || query.isError) {
       userType === "admin"

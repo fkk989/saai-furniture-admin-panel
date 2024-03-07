@@ -48,7 +48,7 @@ export const SofaDynamicPage: React.FC<SofaProps> = () => {
             ?.filter(({ title }) => title.toLowerCase() !== "dining set")
             .map((data) => {
               return (
-                <div key={data.id}>
+                <div key={data.id} className="flex flex-col gap-[10px]">
                   <SofaCard title={data.title} imageUrl={data.imageUrl} />
                   <div className="flex items-center gap-[20px]">
                     <EditPage
