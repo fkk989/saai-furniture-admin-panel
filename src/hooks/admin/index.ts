@@ -156,3 +156,30 @@ export const useAddSubAdmin = () => {
 
   return { subAdminMutation: mutation, admin: mutation.data };
 };
+
+// add admin mutation
+export const useUpdateLimit = () => {
+  const mutation = useMutation({
+    mutationKey: ["updating-admin"],
+    mutationFn: async (body: object) => {
+      const token = localStorage.getItem("saai-admin-token");
+      toast.loading("Creating Admin", { id: "updating-limit" });
+      const data = await axios.post(`${baseUrl}/admin/update-limit`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return data;
+    },
+    onError: (error: any) => {
+      // @ts-ignore
+      const message = error.response.data.message;
+      toast.error(message ? message : "error", { id: "updating-limit" });
+    },
+    onSuccess: () => {
+      toast.success("successfully updated", { id: "updating-limit" });
+    },
+  });
+
+  return { updatingLimitMutation: mutation };
+};

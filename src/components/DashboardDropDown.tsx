@@ -38,6 +38,13 @@ export const DashboardDropDown = () => {
               </li>
             </Link>
           )}
+          {admin && (
+            <Link to={"/dashboard/update-limit"}>
+              <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
+                Update Limit
+              </li>
+            </Link>
+          )}
           <Link to={"/dashboard/add-category"}>
             <li className=" hover:bg-[rgba(0,0,0,0.6)] text-[18px] box-content p-[5px] pl-[10px] pr-[10px] rounded-md cursor-pointer">
               Add Category

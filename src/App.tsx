@@ -18,6 +18,7 @@ import {
   AddCity,
   AddLocation,
   AllAdmin,
+  UpdateLimit,
 } from "./components";
 
 export default function App() {
@@ -97,6 +98,22 @@ export default function App() {
                   component={
                     <div className="w-screen h-screen flex justify-center items-center">
                       <AddAdmin />
+                    </div>
+                  }
+                />
+              }
+            />
+          }
+        />
+        <Route
+          path="/dashboard/update-limit"
+          element={
+            <Protected
+              component={
+                <Layout
+                  component={
+                    <div className="w-screen h-screen flex justify-center items-center">
+                      <UpdateLimit />
                     </div>
                   }
                 />
